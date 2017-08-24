@@ -243,9 +243,14 @@ def topo(topology):
         if verbose:         
             print "*** VSs Properties", vss_properties[i]
         i = i + 1
-    
+
+    # Cycle over all nodes and start grpc servers
+    if parser.path_grpc != "":
+        net.grpc_path = parser.path_grpc
+
     my_info = net.start()
     store_overall_info(my_info)
+
     if tf_version == 1:
         CLI(net)
         net.stop()

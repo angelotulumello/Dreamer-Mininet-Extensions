@@ -109,6 +109,8 @@ class MininetOSHI(Mininet):
         self.node_to_node = {}
         self.node_to_default_via = {}
         self.coex = {}
+
+        self.grpc_path = ""
         
 
         self.verbose = verbose
@@ -823,6 +825,15 @@ class MininetOSHI(Mininet):
         vllcfg['pws'] = self.pws
         vllcfg_file.write(json.dumps(vllcfg, sort_keys=True, indent=4))
         vllcfg_file.close()
+
+        if self.grpc_path != "":
+            all_nodes = self.cr_oshis + self.pe_oshis + self.ce_routers
+            start_server = ["python",self.grpc_path,"&"]
+            print "Starting grpc servers with %s" % start_server
+            for node in all_nodes: 
+                node_name = node.name
+                node.popen(start_server)
+                print "*** Starting grpc server on %s at %s" % (node_name, node.IP())
 
         mylog("*** Nodes are running sshd at the following addresses\n")
 
